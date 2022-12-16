@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MoviesApp</string>
+    <string name="generic_network_error">Network Error</string>
+    <string name="network_try_again">Try Again</string>
+    <string name="load_movie_empty_list">Empty</string>
+    <string name="movie_detail_genres_title">Genres</string>
+</resources>

@@ -1,0 +1,3 @@
+package com.github.filipelipan.moviesapp.infraestructure.coroutines
+
+class CoroutineDispatcherProviderDefault : CoroutineDispatcherProvider

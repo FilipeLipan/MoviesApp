@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
 import com.github.filipelipan.moviesapp.moviedetail.domain.usecase.LoadMovieDetailUseCase
-import com.github.filipelipan.moviesapp.navigation.MovieDestinationsArgs
+import com.github.filipelipan.moviesapp.navigation.AppDestinationsArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ class MovieDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val movieId: String = savedStateHandle[MovieDestinationsArgs.MOVIE_ID_ARG]!!
+    private val movieId: String = savedStateHandle[AppDestinationsArgs.MOVIE_ID_ARG]!!
 
     private val _showError = MutableStateFlow(false)
     private val _isLoading = MutableStateFlow(false)

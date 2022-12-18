@@ -12,8 +12,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.github.filipelipan.moviesapp.moviedetail.MovieDetailScreen
 import com.github.filipelipan.moviesapp.movielist.MovieListScreen
-import com.github.filipelipan.moviesapp.navigation.TodoDestinations.MOVIE_DETAIL_ROUTE
-import com.github.filipelipan.moviesapp.navigation.TodoDestinations.MOVIE_LIST_ROUTE
+import com.github.filipelipan.moviesapp.navigation.AppRoutes.MOVIE_DETAIL_ROUTE
+import com.github.filipelipan.moviesapp.navigation.AppRoutes.MOVIE_LIST_ROUTE
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -21,7 +21,7 @@ fun MoviesNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    startDestination: String = MovieDestinations.MOVIE_LIST_SCREEN,
+    startDestination: String = AppDestinations.MOVIE_LIST_SCREEN,
     navActions: MovieNavigationActions = remember(navController) {
         MovieNavigationActions(navController)
     }

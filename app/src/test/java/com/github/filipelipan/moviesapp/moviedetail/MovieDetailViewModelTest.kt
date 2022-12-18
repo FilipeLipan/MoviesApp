@@ -7,7 +7,7 @@ import com.github.filipelipan.moviesapp.infraestructure.model.Result
 import com.github.filipelipan.moviesapp.moviedetail.domain.error.LoadMovieDetailError
 import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
 import com.github.filipelipan.moviesapp.moviedetail.domain.usecase.LoadMovieDetailUseCase
-import com.github.filipelipan.moviesapp.navigation.MovieDestinationsArgs
+import com.github.filipelipan.moviesapp.navigation.AppDestinationsArgs
 import com.github.filipelipan.moviesapp.util.RandomUtil
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -90,7 +90,7 @@ class MovieListViewModelTest {
 
         movieDetailViewModel = MovieDetailViewModel(
             loadMovieDetailUseCase = loadMovieDetailUseCase,
-            savedStateHandle = SavedStateHandle(mapOf(MovieDestinationsArgs.MOVIE_ID_ARG to movieId))
+            savedStateHandle = SavedStateHandle(mapOf(AppDestinationsArgs.MOVIE_ID_ARG to movieId))
         )
     }
 }

@@ -1,8 +1,8 @@
 package com.github.filipelipan.moviesapp.navigation
 
 import androidx.navigation.NavHostController
-import com.github.filipelipan.moviesapp.navigation.MovieDestinations.MOVIE_DETAIL_SCREEN
-import com.github.filipelipan.moviesapp.navigation.MovieDestinations.MOVIE_LIST_SCREEN
+import com.github.filipelipan.moviesapp.navigation.AppDestinations.MOVIE_DETAIL_SCREEN
+import com.github.filipelipan.moviesapp.navigation.AppDestinations.MOVIE_LIST_SCREEN
 
 class MovieNavigationActions(private val navController: NavHostController) {
 

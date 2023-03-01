@@ -1,0 +1,17 @@
+# Name of your workflow
+name: Android Build and Deployment Pipeline
+
+# Define on which Github event, workflow will trigger
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  job1:
+    name: Job 1
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check Inputs'
+        run: echo 'Job 1'
+

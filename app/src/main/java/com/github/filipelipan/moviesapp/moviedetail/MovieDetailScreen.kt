@@ -42,6 +42,7 @@ fun MovieDetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+
     MovieDetailScreenContent(
         onRefresh = { viewModel.loadMovieDetail() },
         movieDetail = uiState.movieDetail,

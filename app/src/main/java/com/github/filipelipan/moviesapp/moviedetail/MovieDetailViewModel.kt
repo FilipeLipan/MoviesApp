@@ -7,7 +7,11 @@ import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
 import com.github.filipelipan.moviesapp.moviedetail.domain.usecase.LoadMovieDetailUseCase
 import com.github.filipelipan.moviesapp.navigation.AppDestinationsArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,6 +20,8 @@ data class MovieDetailUiState(
     val movieDetail: MovieDetail? = null,
     val showError: Boolean = false,
 )
+
+private const val STOP_TIMEOUT = 5000L
 
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
@@ -38,7 +44,7 @@ class MovieDetailViewModel @Inject constructor(
             )
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
             initialValue = MovieDetailUiState()
         )
 

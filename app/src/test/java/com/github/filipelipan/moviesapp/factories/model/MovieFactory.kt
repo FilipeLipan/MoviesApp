@@ -8,13 +8,12 @@ object MovieFactory {
     fun make(
         id: Int = RandomUtil.id(),
         title: String = RandomUtil.fullName(),
-        poster_path: ImageUrl.LowDefinitionImage = ImageUrl.LowDefinitionImage(RandomUtil.name()),
+        posterPath: ImageUrl.LowDefinitionImage = ImageUrl.LowDefinitionImage(RandomUtil.name()),
         rating: String = RandomUtil.int().toString(),
-        overview: String = RandomUtil.name(),
     ) = Movie(
         id = id,
         name = title,
-        imageUrl = poster_path,
+        imageUrl = posterPath,
         rating = rating,
     )
 }

@@ -1,29 +1,36 @@
 package com.github.filipelipan.moviesapp.movielist
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.github.filipelipan.moviesapp.movielist.domain.model.Movie
-import com.github.filipelipan.moviesapp.ui.theme.MoviesAppTheme
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.github.filipelipan.moviesapp.R
 import com.github.filipelipan.moviesapp.infraestructure.model.ImageUrl
 import com.github.filipelipan.moviesapp.infraestructure.ui.GenericErrorScreen
 import com.github.filipelipan.moviesapp.infraestructure.ui.LoadingContent
+import com.github.filipelipan.moviesapp.movielist.domain.model.Movie
+import com.github.filipelipan.moviesapp.ui.theme.MoviesAppTheme
 import com.github.filipelipan.moviesapp.ui.theme.Spacing
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -31,7 +38,6 @@ import com.github.filipelipan.moviesapp.ui.theme.Spacing
 fun MovieListScreen(
     onMovieItemClick: (Int) -> Unit,
     viewModel: MovieListViewModel = hiltViewModel(),
-    onBack: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -66,14 +72,14 @@ private fun MovieContent(
             GenericErrorScreen(
                 title = stringResource(R.string.load_movie_empty_list),
                 buttonName = stringResource(R.string.network_try_again),
-                buttonAction = onRefresh,
+                onButtonClick = onRefresh,
             )
         },
         errorContent = {
             GenericErrorScreen(
                 title = stringResource(R.string.generic_network_error),
                 buttonName = stringResource(R.string.network_try_again),
-                buttonAction = onRefresh,
+                onButtonClick = onRefresh,
             )
         },
         onRefresh = onRefresh
@@ -126,7 +132,7 @@ private fun MovieItem(
 
 @Preview(showBackground = true)
 @Composable
-fun MovieListScreenPreview() {
+private fun MovieListScreenPreview() {
     MoviesAppTheme {
         MovieContent(
             loading = false,

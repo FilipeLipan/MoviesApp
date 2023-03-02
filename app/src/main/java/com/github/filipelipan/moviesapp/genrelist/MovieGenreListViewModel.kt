@@ -18,6 +18,8 @@ data class MovieGenreListUiState(
     val movies: List<Movie>? = null
 )
 
+private const val STOP_TIMEOUT = 5000L
+
 @HiltViewModel
 class MovieGenreListViewModel @Inject constructor(
     val loadMoviesUseCase: LoadMoviesUseCase,
@@ -34,7 +36,7 @@ class MovieGenreListViewModel @Inject constructor(
             )
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(STOP_TIMEOUT),
             initialValue = MovieGenreListUiState()
         )
 

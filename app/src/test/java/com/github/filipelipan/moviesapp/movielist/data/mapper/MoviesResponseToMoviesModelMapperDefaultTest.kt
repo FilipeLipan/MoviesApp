@@ -18,8 +18,8 @@ class MoviesResponseToMoviesModelMapperDefaultTest {
         val expected = Movie(
             id = movieResponse.id,
             name = movieResponse.title,
-            imageUrl = ImageUrl.LowDefinitionImage(imagePath = movieResponse.poster_path),
-            rating = movieResponse.vote_average,
+            imageUrl = ImageUrl.LowDefinitionImage(imagePath = movieResponse.posterPath),
+            rating = movieResponse.voteAverage,
         )
 
         val actual = moviesResponseToMoviesModelMapper.mapFrom(responses)

@@ -15,9 +15,9 @@ class MovieDetailResponseToMovieDetailMapperDefaultTest {
     @Test
     fun mapFrom_response_returnMovieDetails() {
         val response = MovieDetailResponseFactory.make(
-            release_date = "2022-10-19"
+            releaseDate = "2022-10-19"
         )
-        val rating = response.vote_average
+        val rating = response.voteAverage
             .toBigDecimal().setScale(1, RoundingMode.HALF_EVEN)
         val actual = subject.mapFrom(response)
 
@@ -25,7 +25,7 @@ class MovieDetailResponseToMovieDetailMapperDefaultTest {
             id = response.id,
             name = response.title,
             imageUrl = ImageUrl.HighDefinitionImage(
-                imagePath = response.poster_path
+                imagePath = response.posterPath
             ),
             genres = response.genres.map { genreResponse ->
                 Genre(
@@ -34,7 +34,7 @@ class MovieDetailResponseToMovieDetailMapperDefaultTest {
                 )
             },
             overview = response.overview,
-            voteCount = response.vote_count,
+            voteCount = response.voteCount,
             description = "out 2022 - $rating/10"
         )
 
@@ -44,9 +44,9 @@ class MovieDetailResponseToMovieDetailMapperDefaultTest {
     @Test
     fun mapFromResponse_withoutValidDate_returnDescriptionWithoutDate() {
         val response = MovieDetailResponseFactory.make(
-            release_date = "dwqdwq"
+            releaseDate = "dwqdwq"
         )
-        val rating = response.vote_average
+        val rating = response.voteAverage
             .toBigDecimal().setScale(1, RoundingMode.HALF_EVEN)
         val actual = subject.mapFrom(response)
 

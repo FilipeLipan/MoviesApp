@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import retrofit2.Response
 
+@SuppressWarnings("InstanceOfCheckForException", "TooGenericExceptionCaught")
 suspend fun <T> safeApiCall(
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
     apiCall: suspend () -> T,

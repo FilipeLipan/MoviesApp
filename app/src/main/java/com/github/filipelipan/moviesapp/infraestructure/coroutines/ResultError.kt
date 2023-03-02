@@ -1,3 +1,5 @@
+@file:SuppressWarnings("MatchingDeclarationName")
+
 package com.github.filipelipan.moviesapp.infraestructure.coroutines
 
 class NetworkError(

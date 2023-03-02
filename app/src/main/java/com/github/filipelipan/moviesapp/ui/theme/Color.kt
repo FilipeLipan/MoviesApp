@@ -1,3 +1,4 @@
+@file:Suppress("MagicNumber")
 package com.github.filipelipan.moviesapp.ui.theme
 
 import androidx.compose.ui.graphics.Color

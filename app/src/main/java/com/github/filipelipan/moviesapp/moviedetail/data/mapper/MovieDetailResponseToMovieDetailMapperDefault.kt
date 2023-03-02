@@ -10,13 +10,13 @@ import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
 
 const val RELEASE_DATE_FORMAT_PATTERN = "MMM YYYY"
 
-class MovieDetailResponseToMovieDetailMapperDefault() : MovieDetailResponseToMovieDetailMapper {
+class MovieDetailResponseToMovieDetailMapperDefault : MovieDetailResponseToMovieDetailMapper {
     override fun mapFrom(movieDetailResponse: MovieDetailResponse): MovieDetail {
         return MovieDetail(
             id = movieDetailResponse.id,
             name = movieDetailResponse.title,
             imageUrl = ImageUrl.HighDefinitionImage(
-                imagePath = movieDetailResponse.poster_path
+                imagePath = movieDetailResponse.posterPath
             ),
             genres = movieDetailResponse.genres.map { genreResponse ->
                 Genre(
@@ -25,10 +25,10 @@ class MovieDetailResponseToMovieDetailMapperDefault() : MovieDetailResponseToMov
                 )
             },
             overview = movieDetailResponse.overview,
-            voteCount = movieDetailResponse.vote_count,
+            voteCount = movieDetailResponse.voteCount,
             description = formatDescription(
-                movieDetailResponse.release_date,
-                movieDetailResponse.vote_average
+                movieDetailResponse.releaseDate,
+                movieDetailResponse.voteAverage
             )
         )
     }

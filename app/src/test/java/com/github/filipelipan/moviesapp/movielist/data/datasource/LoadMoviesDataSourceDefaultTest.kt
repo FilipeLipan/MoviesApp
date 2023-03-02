@@ -94,7 +94,7 @@ class LoadMoviesDataSourceDefaultTest {
         val expected = Result.Success(
             Pagination(
                 page = loadMovieResponse.page,
-                totalPages = loadMovieResponse.total_pages,
+                totalPages = loadMovieResponse.totalPages,
                 movies = loadMovieMapperModel
             )
         )

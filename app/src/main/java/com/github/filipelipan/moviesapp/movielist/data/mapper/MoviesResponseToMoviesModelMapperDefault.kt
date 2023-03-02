@@ -12,8 +12,8 @@ class MoviesResponseToMoviesModelMapperDefault : MoviesResponseToMoviesModelMapp
             Movie(
                 id = it.id,
                 name = it.title,
-                imageUrl = ImageUrl.LowDefinitionImage(imagePath = it.poster_path),
-                rating = it.vote_average,
+                imageUrl = ImageUrl.LowDefinitionImage(imagePath = it.posterPath),
+                rating = it.voteAverage,
             )
         }
     }

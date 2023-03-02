@@ -19,7 +19,6 @@ import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
-
 class LoadMovieDetailDataSourceTest {
 
     @get:Rule

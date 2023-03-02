@@ -1,11 +1,8 @@
 package com.github.filipelipan.moviesapp.infraestructure.ui
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun LoadingGenreContent(
@@ -22,7 +19,7 @@ fun LoadingGenreContent(
         if (empty) {
             emptyContent()
         } else {
-            if(loading) {
+            if (loading) {
                 loadingContent()
             } else {
                 content()

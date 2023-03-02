@@ -7,14 +7,14 @@ object MovieResponseFactory {
     fun make(
         id: Int = RandomUtil.id(),
         title: String = RandomUtil.fullName(),
-        poster_path: String = RandomUtil.name(),
-        vote_average: String = RandomUtil.int().toString(),
+        posterPath: String = RandomUtil.name(),
+        voteAverage: String = RandomUtil.int().toString(),
         overview: String = RandomUtil.name(),
     ) = MovieResponse(
         id = id,
         title = title,
-        poster_path = poster_path,
-        vote_average = vote_average,
+        posterPath = posterPath,
+        voteAverage = voteAverage,
         overview = overview,
     )
 }

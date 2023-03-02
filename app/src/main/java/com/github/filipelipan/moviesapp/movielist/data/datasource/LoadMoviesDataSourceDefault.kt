@@ -31,7 +31,7 @@ class LoadMoviesDataSourceDefault(
             return Result.Success(
                 Pagination(
                     page = it.page,
-                    totalPages = it.total_pages,
+                    totalPages = it.totalPages,
                     movies = moviesResponseToMoviesModelMapper.mapFrom(
                         it.movies
                     )

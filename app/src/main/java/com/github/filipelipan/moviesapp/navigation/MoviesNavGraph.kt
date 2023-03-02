@@ -38,7 +38,6 @@ fun MoviesNavGraph(
 
         composable(MOVIE_LIST_ROUTE) {
             MovieListScreen(
-                onBack = { navController.popBackStack() },
                 onMovieItemClick = { movieId -> navActions.navigateToMovieDetail(movieId) },
             )
         }

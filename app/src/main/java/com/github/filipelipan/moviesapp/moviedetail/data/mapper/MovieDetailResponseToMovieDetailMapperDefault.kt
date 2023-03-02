@@ -46,7 +46,7 @@ class MovieDetailResponseToMovieDetailMapperDefault : MovieDetailResponseToMovie
         val stringBuilder = StringBuilder()
 
         val formattedDate = releaseDateResponse.parseDateDefault(locale)
-            ?.formatDate(RELEASE_DATE_FORMAT_PATTERN)
+            ?.formatDate(RELEASE_DATE_FORMAT_PATTERN, locale)
 
         val formattedRating = voteAverageResponse
             .formatRating()

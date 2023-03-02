@@ -6,9 +6,9 @@ import java.util.*
 
 const val DEFAULT_DATE_PATTERN = "yyyy-MM-dd"
 
-fun String.parseDateDefault() : Date? {
+fun String.parseDateDefault(locale: Locale): Date? {
     return try {
-        val dateFormatter =  SimpleDateFormat(DEFAULT_DATE_PATTERN, Locale.getDefault())
+        val dateFormatter =  SimpleDateFormat(DEFAULT_DATE_PATTERN, locale)
         dateFormatter.parse(this)
     } catch (parseException: ParseException) {
         null

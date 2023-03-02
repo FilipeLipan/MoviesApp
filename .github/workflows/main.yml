@@ -89,7 +89,7 @@ jobs:
           distribution: 'adopt'
           
       - name: Run detekt
-        run: ./gradlew detektCheck
+        run: ./gradlew detekt
 
       - name: Run unit tests
         run: ./gradlew test --stacktrace

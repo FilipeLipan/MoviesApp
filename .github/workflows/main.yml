@@ -54,6 +54,8 @@ jobs:
 
   test:
     runs-on: macos-latest
+    env:
+      TZ: "America/Sao_Paulo"
     needs: build
     strategy:
       matrix:

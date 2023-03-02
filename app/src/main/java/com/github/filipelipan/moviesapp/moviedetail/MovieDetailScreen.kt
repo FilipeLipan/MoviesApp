@@ -127,6 +127,7 @@ fun MovieDetailScreenSuccessContent(
                     .background(MaterialTheme.colorScheme.surfaceColorAtElevation(9.dp))
             ) {
 
+
                 val (headerImage, posterImage, title, description, backButton, bottomSpace) = createRefs()
 
                 AsyncImage(

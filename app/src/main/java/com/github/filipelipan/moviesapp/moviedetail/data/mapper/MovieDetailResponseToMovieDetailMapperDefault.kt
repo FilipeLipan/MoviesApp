@@ -7,11 +7,15 @@ import com.github.filipelipan.moviesapp.infraestructure.util.parseDateDefault
 import com.github.filipelipan.moviesapp.moviedetail.data.response.MovieDetailResponse
 import com.github.filipelipan.moviesapp.moviedetail.domain.model.Genre
 import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
+import java.util.Locale
 
 const val RELEASE_DATE_FORMAT_PATTERN = "MMM YYYY"
 
 class MovieDetailResponseToMovieDetailMapperDefault : MovieDetailResponseToMovieDetailMapper {
-    override fun mapFrom(movieDetailResponse: MovieDetailResponse): MovieDetail {
+    override fun mapFrom(
+        movieDetailResponse: MovieDetailResponse,
+        locale: Locale
+    ): MovieDetail {
         return MovieDetail(
             id = movieDetailResponse.id,
             name = movieDetailResponse.title,
@@ -28,18 +32,20 @@ class MovieDetailResponseToMovieDetailMapperDefault : MovieDetailResponseToMovie
             voteCount = movieDetailResponse.voteCount,
             description = formatDescription(
                 movieDetailResponse.releaseDate,
-                movieDetailResponse.voteAverage
+                movieDetailResponse.voteAverage,
+                locale
             )
         )
     }
 
     private fun formatDescription(
         releaseDateResponse: String,
-        voteAverageResponse: Double
+        voteAverageResponse: Double,
+        locale: Locale
     ): String {
         val stringBuilder = StringBuilder()
 
-        val formattedDate = releaseDateResponse.parseDateDefault()
+        val formattedDate = releaseDateResponse.parseDateDefault(locale)
             ?.formatDate(RELEASE_DATE_FORMAT_PATTERN)
 
         val formattedRating = voteAverageResponse

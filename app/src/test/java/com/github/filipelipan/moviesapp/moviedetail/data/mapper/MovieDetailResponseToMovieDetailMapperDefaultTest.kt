@@ -7,6 +7,7 @@ import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
 import junit.framework.Assert.assertEquals
 import org.junit.Test
 import java.math.RoundingMode
+import java.util.Locale
 
 class MovieDetailResponseToMovieDetailMapperDefaultTest {
 
@@ -19,7 +20,7 @@ class MovieDetailResponseToMovieDetailMapperDefaultTest {
         )
         val rating = response.voteAverage
             .toBigDecimal().setScale(1, RoundingMode.HALF_EVEN)
-        val actual = subject.mapFrom(response)
+        val actual = subject.mapFrom(response, Locale.ENGLISH)
 
         val expected = MovieDetail(
             id = response.id,
@@ -35,7 +36,7 @@ class MovieDetailResponseToMovieDetailMapperDefaultTest {
             },
             overview = response.overview,
             voteCount = response.voteCount,
-            description = "out 2022 - $rating/10"
+            description = "Oct 2022 - $rating/10"
         )
 
         assertEquals(expected, actual)
@@ -48,7 +49,7 @@ class MovieDetailResponseToMovieDetailMapperDefaultTest {
         )
         val rating = response.voteAverage
             .toBigDecimal().setScale(1, RoundingMode.HALF_EVEN)
-        val actual = subject.mapFrom(response)
+        val actual = subject.mapFrom(response, Locale.ENGLISH)
 
         val expected = "$rating/10"
 

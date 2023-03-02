@@ -16,10 +16,11 @@ fun String.parseDateDefault(locale: Locale): Date? {
 }
 
 fun Date.formatDate(
-    pattern: String
+    pattern: String,
+    locale: Locale
 ) : String? {
     return try {
-        val dateFormatter =  SimpleDateFormat(pattern, Locale.getDefault())
+        val dateFormatter =  SimpleDateFormat(pattern, locale)
         return dateFormatter.format(this)
     } catch (parseException: ParseException) {
         null

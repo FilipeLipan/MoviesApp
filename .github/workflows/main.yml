@@ -4,7 +4,7 @@ name: Android Build and Deployment Pipeline
 # Define on which Github event, workflow will trigger
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
     branches: [ main ]
 jobs:

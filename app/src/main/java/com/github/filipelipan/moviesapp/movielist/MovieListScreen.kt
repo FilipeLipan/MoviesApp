@@ -31,7 +31,7 @@ import com.github.filipelipan.moviesapp.infraestructure.ui.GenericErrorScreen
 import com.github.filipelipan.moviesapp.infraestructure.ui.LoadingContent
 import com.github.filipelipan.moviesapp.movielist.domain.model.Movie
 import com.github.filipelipan.moviesapp.ui.theme.MoviesAppTheme
-import com.github.filipelipan.moviesapp.ui.theme.Spacing
+import com.github.filipelipan.moviesapp.ui.theme.*
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable

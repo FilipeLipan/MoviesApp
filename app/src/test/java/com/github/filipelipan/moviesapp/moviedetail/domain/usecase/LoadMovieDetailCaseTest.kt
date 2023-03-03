@@ -29,8 +29,8 @@ class LoadMovieDetailCaseTest {
 
         coVerify {
             movieDetailRepository.loadMovieDetail(
-                movieId = movieId,
-                language = "en-US",
+                movieId = 2312321423423432,
+                language = "dasdasdkasnmdkasmdas",
             )
         }
     }

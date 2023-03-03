@@ -46,8 +46,26 @@ class MovieListViewModelTest {
 
         val expected = MovieListUiState(
             isLoading = false,
-            showError = false,
-            movies = movies
+            movies = movies,
+            movieListScreenState = MovieListScreenState.Success
+        )
+
+        movieListViewModel.uiState.test {
+            assertEquals(expected, awaitItem())
+        }
+    }
+
+    @Test
+    fun loadMovies_withSuccessWithEmptyList_showEmpty() = runTest {
+        val movies = emptyList<Movie>()
+        prepareScenario(
+            loadMoviesResult = Result.Success(PagingFactory.make(movies = movies))
+        )
+
+        val expected = MovieListUiState(
+            isLoading = false,
+            movies = movies,
+            movieListScreenState = MovieListScreenState.Empty
         )
 
         movieListViewModel.uiState.test {
@@ -62,7 +80,7 @@ class MovieListViewModelTest {
             loadMoviesResult = Result.Success(PagingFactory.make(movies = movies))
         )
 
-        movieListViewModel.refresh()
+        movieListViewModel.dispatchViewAction(MovieListAction.Refresh)
 
         coVerify(exactly = 2) {
             loadMoviesUseCase(genreKey = any())
@@ -77,8 +95,8 @@ class MovieListViewModelTest {
 
         val expected = MovieListUiState(
             isLoading = false,
-            showError = true,
-            movies = null
+            movies = null,
+            movieListScreenState = MovieListScreenState.Error
         )
 
         movieListViewModel.uiState.test {

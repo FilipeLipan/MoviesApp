@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -19,19 +18,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.github.filipelipan.moviesapp.R
-import com.github.filipelipan.moviesapp.infraestructure.model.ImageUrl
+import com.github.filipelipan.moviesapp.infraestructure.ui.GenericEmptyScreen
 import com.github.filipelipan.moviesapp.infraestructure.ui.GenericErrorScreen
-import com.github.filipelipan.moviesapp.infraestructure.ui.LoadingContent
 import com.github.filipelipan.moviesapp.movielist.domain.model.Movie
-import com.github.filipelipan.moviesapp.ui.theme.MoviesAppTheme
 import com.github.filipelipan.moviesapp.ui.theme.Spacing
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -47,62 +45,71 @@ fun MovieListScreen(
     ) {
         MovieContent(
             onMovieItemClick = onMovieItemClick,
-            onRefresh = { viewModel.refresh() },
+            onRefresh = { viewModel.dispatchViewAction(MovieListAction.Refresh) },
             movies = uiState.movies.orEmpty(),
-            loading = uiState.isLoading,
-            error = uiState.showError,
+            isLoading = uiState.isLoading,
+            movieListScreenState = uiState.movieListScreenState
         )
     }
 }
 
 @Composable
 private fun MovieContent(
-    loading: Boolean,
-    error: Boolean,
-    movies: List<Movie>,
+    isLoading: Boolean,
+    movieListScreenState: MovieListScreenState,
+    movies: List<Movie>?,
+    onMovieItemClick: (Int) -> Unit,
     onRefresh: () -> Unit,
+) {
+
+    val content = when (movieListScreenState) {
+        MovieListScreenState.Empty -> GenericEmptyScreen(
+            title = stringResource(R.string.generic_empty_message),
+            buttonName = stringResource(R.string.generic_empty_try_again_message),
+            buttonAction = onRefresh
+        )
+        MovieListScreenState.Error -> GenericErrorScreen(
+            title = stringResource(R.string.generic_network_error_message),
+            buttonName = stringResource(R.string.generic_network_error_try_again_message),
+            buttonAction = onRefresh
+        )
+        MovieListScreenState.Success -> MovieListScreenSuccessContent(
+            movies = movies,
+            onMovieItemClick = onMovieItemClick,
+        )
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isLoading),
+        onRefresh = onRefresh,
+        modifier = Modifier.fillMaxSize(),
+        content = { content }
+    )
+}
+
+@Composable
+private fun MovieListScreenSuccessContent(
+    movies: List<Movie>?,
     onMovieItemClick: (Int) -> Unit,
 ) {
-    LoadingContent(
-        loading = loading,
-        empty = movies.isEmpty() && !loading && !error,
-        error = error,
-        modifier = Modifier.wrapContentSize(),
-        emptyContent = {
-            GenericErrorScreen(
-                title = stringResource(R.string.load_movie_empty_list),
-                buttonName = stringResource(R.string.network_try_again),
-                onButtonClick = onRefresh,
-            )
-        },
-        errorContent = {
-            GenericErrorScreen(
-                title = stringResource(R.string.generic_network_error),
-                buttonName = stringResource(R.string.network_try_again),
-                onButtonClick = onRefresh,
-            )
-        },
-        onRefresh = onRefresh
+    LazyVerticalGrid(
+        modifier = Modifier.fillMaxSize(),
+        columns = GridCells.Adaptive(minSize = 116.dp),
+        contentPadding = PaddingValues(
+            start = Spacing.level4,
+            end = Spacing.level4,
+            top = Spacing.level5,
+            bottom = Spacing.level5,
+        ),
     ) {
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxSize(),
-            columns = GridCells.Adaptive(minSize = 116.dp),
-            contentPadding = PaddingValues(
-                start = Spacing.level4,
-                end = Spacing.level4,
-                top = Spacing.level5,
-                bottom = Spacing.level5,
-            ),
-        ) {
-            items(
-                items = movies,
-                key = { movie -> movie.id }
-            ) { movie ->
-                MovieItem(
-                    movie = movie,
-                    onMovieItemClick = onMovieItemClick,
-                )
-            }
+        items(
+            items = movies.orEmpty(),
+            key = { movie -> movie.id }
+        ) { movie ->
+            MovieItem(
+                movie = movie,
+                onMovieItemClick = onMovieItemClick,
+            )
         }
     }
 }
@@ -126,22 +133,6 @@ private fun MovieItem(
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MovieListScreenPreview() {
-    MoviesAppTheme {
-        MovieContent(
-            loading = false,
-            movies = listOf(
-                Movie(2, "name", ImageUrl.LowDefinitionImage("sda"), "Viagem")
-            ),
-            onRefresh = { },
-            onMovieItemClick = { },
-            error = false
         )
     }
 }

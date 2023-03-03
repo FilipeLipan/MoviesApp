@@ -4,4 +4,9 @@
     <string name="network_try_again">Try Again</string>
     <string name="load_movie_empty_list">Empty</string>
     <string name="movie_detail_genres_title">Genres</string>
+
+    <string name="generic_network_error_message">Network Error</string>
+    <string name="generic_network_error_try_again_message">Try Again</string>
+    <string name="generic_empty_message">Empty</string>
+    <string name="generic_empty_try_again_message">Reload</string>
 </resources>

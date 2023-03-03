@@ -19,7 +19,7 @@ object RandomUtil {
     fun fullName(): String = "${Random.nextULong().toString()} ${Random.nextULong().toString()}"
 
     fun <T> listOf(
-        quantity: Int = int(until = 3),
+        quantity: Int = int(from = 1, until = 3),
         block: () -> T,
     ) = mutableListOf<T>().apply {
         repeat(quantity) { add(block()) }

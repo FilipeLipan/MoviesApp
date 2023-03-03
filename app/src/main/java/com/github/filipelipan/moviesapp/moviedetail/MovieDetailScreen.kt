@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -28,11 +27,9 @@ import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -41,14 +38,13 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.github.filipelipan.moviesapp.R
-import com.github.filipelipan.moviesapp.infraestructure.model.ImageUrl
+import com.github.filipelipan.moviesapp.infraestructure.ui.GenericEmptyScreen
 import com.github.filipelipan.moviesapp.infraestructure.ui.GenericErrorScreen
-import com.github.filipelipan.moviesapp.infraestructure.ui.LoadingContent
-import com.github.filipelipan.moviesapp.moviedetail.domain.model.Genre
 import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
-import com.github.filipelipan.moviesapp.ui.theme.MoviesAppTheme
 import com.github.filipelipan.moviesapp.ui.theme.Spacing
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -60,48 +56,45 @@ fun MovieDetailScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     MovieDetailScreenContent(
-        onRefresh = { viewModel.loadMovieDetail() },
+        onRefresh = { viewModel.dispatchViewAction(MovieDetailAction.Refresh) },
         movieDetail = uiState.movieDetail,
-        loading = uiState.isLoading,
-        error = uiState.showError,
+        isLoading = uiState.isLoading,
+        movieDetailScreenState = uiState.movieDetailScreenState,
         onBack = onBack
     )
 }
 
 @Composable
 fun MovieDetailScreenContent(
-    loading: Boolean,
-    error: Boolean,
+    isLoading: Boolean,
     movieDetail: MovieDetail?,
     onRefresh: () -> Unit,
     onBack: () -> Unit,
+    movieDetailScreenState: MovieDetailScreenState
 ) {
-    LoadingContent(
-        loading = loading,
-        empty = movieDetail == null && !loading && !error,
-        error = error,
-        modifier = Modifier.wrapContentSize(),
-        emptyContent = {
-            GenericErrorScreen(
-                title = stringResource(R.string.load_movie_empty_list),
-                buttonName = stringResource(R.string.network_try_again),
-                onButtonClick = onRefresh,
-            )
-        },
-        errorContent = {
-            GenericErrorScreen(
-                title = stringResource(R.string.generic_network_error),
-                buttonName = stringResource(R.string.network_try_again),
-                onButtonClick = onRefresh,
-            )
-        },
-        onRefresh = onRefresh
-    ) {
-        MovieDetailScreenSuccessContent(
+    val content = when(movieDetailScreenState) {
+        MovieDetailScreenState.Empty -> GenericEmptyScreen(
+            title = stringResource(R.string.generic_empty_message),
+            buttonName = stringResource(R.string.generic_empty_try_again_message),
+            buttonAction = onRefresh
+        )
+        MovieDetailScreenState.Error -> GenericErrorScreen(
+            title = stringResource(R.string.generic_network_error_message),
+            buttonName = stringResource(R.string.generic_network_error_try_again_message),
+            buttonAction = onRefresh
+        )
+        MovieDetailScreenState.Success -> MovieDetailScreenSuccessContent(
             movieDetail = movieDetail,
             onBack = onBack,
         )
     }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isLoading),
+        onRefresh = onRefresh,
+        modifier = Modifier.fillMaxSize(),
+        content = { content }
+    )
 }
 
 private const val CARD_CORNER_SIZE = 50
@@ -263,35 +256,5 @@ fun MovieDetailScreenSuccessContent(
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MovieListScreenPreview() {
-    MoviesAppTheme {
-        MovieDetailScreenContent(
-            onRefresh = { },
-            movieDetail = MovieDetail(
-                id = 123,
-                name = "23232",
-                imageUrl = ImageUrl.HighDefinitionImage(
-                    imagePath = "/pFlaoHTZeyNkG83vxsAJiGzfSsa.jpg"
-                ),
-                genres = listOf(
-                    Genre(1, "Ação"),
-                    Genre(2, "Aventura"),
-                    Genre(3, "Aventura"),
-                    Genre(4, "Aventura"),
-                    Genre(5, "Aventura"),
-                ),
-                overview = "Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes",
-                voteCount = "23232",
-                description = "Feb 2022 - 203 mins"
-            ),
-            loading = false,
-            error = false,
-            onBack = { }
-        )
     }
 }

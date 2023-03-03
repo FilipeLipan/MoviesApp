@@ -3,23 +3,18 @@ package com.github.filipelipan.moviesapp.moviedetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.filipelipan.moviesapp.infraestructure.ui.ActionDispatcher
 import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
 import com.github.filipelipan.moviesapp.moviedetail.domain.usecase.LoadMovieDetailUseCase
 import com.github.filipelipan.moviesapp.navigation.AppDestinationsArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class MovieDetailUiState(
-    val isLoading: Boolean = false,
-    val movieDetail: MovieDetail? = null,
-    val showError: Boolean = false,
-)
 
 private const val STOP_TIMEOUT = 5000L
 
@@ -27,20 +22,21 @@ private const val STOP_TIMEOUT = 5000L
 class MovieDetailViewModel @Inject constructor(
     private val loadMovieDetailUseCase: LoadMovieDetailUseCase,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : ViewModel(), ActionDispatcher<StateFlow<MovieDetailUiState>, MovieDetailAction> {
 
     private val movieId: String = savedStateHandle[AppDestinationsArgs.MOVIE_ID_ARG]!!
 
-    private val _showError = MutableStateFlow(false)
     private val _isLoading = MutableStateFlow(false)
     private val _movieDetail = MutableStateFlow<MovieDetail?>(null)
+    private val _movieListScreenState = MutableStateFlow<MovieDetailScreenState>(MovieDetailScreenState.Success)
 
-    val uiState: StateFlow<MovieDetailUiState> =
-        combine(_isLoading, _movieDetail, _showError) { _isLoading, _movieDetail, _showError ->
+    override val uiState: StateFlow<MovieDetailUiState> =
+        combine(_isLoading, _movieDetail, _movieListScreenState) {
+                _isLoading, _movieDetail, _movieListScreenState ->
             MovieDetailUiState(
                 isLoading = _isLoading,
                 movieDetail = _movieDetail,
-                showError = _showError,
+                movieDetailScreenState = _movieListScreenState
             )
         }.stateIn(
             scope = viewModelScope,
@@ -48,25 +44,29 @@ class MovieDetailViewModel @Inject constructor(
             initialValue = MovieDetailUiState()
         )
 
+    override fun dispatchViewAction(viewAction: MovieDetailAction) {
+        when (viewAction) {
+            MovieDetailAction.Refresh -> loadMovieDetail()
+        }
+    }
+
     init {
         loadMovieDetail()
     }
 
-    fun loadMovieDetail() {
+    private fun loadMovieDetail() {
         viewModelScope.launch {
             _isLoading.value = true
-            _showError.value = false
             loadMovieDetailUseCase(
                 movieId = movieId
             ).onSuccess {
                 _movieDetail.value = it
-                _showError.value = false
+                _movieListScreenState.value = MovieDetailScreenState.Success
                 _isLoading.value = false
             }.onError {
-                _showError.value = true
+                _movieListScreenState.value = MovieDetailScreenState.Error
                 _isLoading.value = false
             }
         }
     }
-
 }

@@ -15,12 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.github.filipelipan.moviesapp.ui.theme.Spacing
 import com.github.filipelipan.moviesapp.R
 
 @Composable
-fun GenericErrorScreen(
+fun GenericEmptyScreen(
     title: String,
     buttonName: String,
     buttonAction: () -> Unit,
@@ -30,10 +31,10 @@ fun GenericErrorScreen(
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
             LottieLoader(
                 modifier = Modifier.size(200.dp),
-                rawResource = R.raw.error,
+                rawResource = R.raw.empty,
+                contentScale = ContentScale.Fit
             )
 
             Text(

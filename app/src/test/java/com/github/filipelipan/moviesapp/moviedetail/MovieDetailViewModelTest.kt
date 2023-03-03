@@ -3,10 +3,12 @@ package com.github.filipelipan.moviesapp.moviedetail
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.github.filipelipan.moviesapp.factories.model.MovieDetailFactory
+import com.github.filipelipan.moviesapp.factories.model.PagingFactory
 import com.github.filipelipan.moviesapp.infraestructure.model.Result
 import com.github.filipelipan.moviesapp.moviedetail.domain.error.LoadMovieDetailError
 import com.github.filipelipan.moviesapp.moviedetail.domain.model.MovieDetail
 import com.github.filipelipan.moviesapp.moviedetail.domain.usecase.LoadMovieDetailUseCase
+import com.github.filipelipan.moviesapp.movielist.MovieListAction
 import com.github.filipelipan.moviesapp.navigation.AppDestinationsArgs
 import com.github.filipelipan.moviesapp.util.RandomUtil
 import io.mockk.coEvery
@@ -50,13 +52,13 @@ class MovieDetailViewModelTest {
     fun loadMovieDetail_withSuccess_showSuccess() = runTest {
         val movieDetail = MovieDetailFactory.make()
         prepareScenario(
-            loadMoviesResult = Result.Success(movieDetail)
+            loadMovieResult = Result.Success(movieDetail)
         )
 
         val expected = MovieDetailUiState(
             isLoading = false,
-            showError = false,
-            movieDetail = movieDetail
+            movieDetail = movieDetail,
+            movieDetailScreenState = MovieDetailScreenState.Success
         )
 
         movieDetailViewModel.uiState.test {
@@ -64,17 +66,32 @@ class MovieDetailViewModelTest {
         }
     }
 
+    @Test
+    fun refreshMovieDetail_withSuccess_reloadMovies() = runTest {
+        val movieDetail = MovieDetailFactory.make()
+        val movieId = RandomUtil.id().toString()
+        prepareScenario(
+            loadMovieResult = Result.Success(movieDetail),
+            movieId = movieId
+        )
+
+        movieDetailViewModel.dispatchViewAction(MovieDetailAction.Refresh)
+
+        coVerify(exactly = 2) {
+            loadMovieDetailUseCase(movieId = movieId)
+        }
+    }
 
     @Test
     fun loadMovieDetail_withError_showError() = runTest {
         prepareScenario(
-            loadMoviesResult = Result.Error(LoadMovieDetailError.NetworkError)
+            loadMovieResult = Result.Error(LoadMovieDetailError.NetworkError)
         )
 
         val expected = MovieDetailUiState(
             isLoading = false,
-            showError = true,
-            movieDetail = null
+            movieDetail = null,
+            movieDetailScreenState = MovieDetailScreenState.Error
         )
 
         movieDetailViewModel.uiState.test {
@@ -83,13 +100,13 @@ class MovieDetailViewModelTest {
     }
 
     private fun prepareScenario(
-        loadMoviesResult: Result<MovieDetail, LoadMovieDetailError> =
+        loadMovieResult: Result<MovieDetail, LoadMovieDetailError> =
             Result.Success(MovieDetailFactory.make()),
         movieId: String = RandomUtil.id().toString()
     ) {
         coEvery {
             loadMovieDetailUseCase(any())
-        } returns loadMoviesResult
+        } returns loadMovieResult
 
         movieDetailViewModel = MovieDetailViewModel(
             loadMovieDetailUseCase = loadMovieDetailUseCase,

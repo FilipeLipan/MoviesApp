@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.filipelipan.moviesapp.movielist.domain.model.Movie
 import com.github.filipelipan.moviesapp.movielist.domain.usecase.LoadMoviesUseCase
+import com.github.filipelipan.moviesapp.infraestructure.ui.ActionDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,29 +14,26 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class MovieListUiState(
-    val isLoading: Boolean = true,
-    val movies: List<Movie>? = null,
-    val showError: Boolean = false,
-)
-
 const val STOP_TIMEOUT = 5000L
 
 @HiltViewModel
 class MovieListViewModel @Inject constructor(
     private val loadMoviesUseCase: LoadMoviesUseCase,
-) : ViewModel() {
+) : ViewModel(), ActionDispatcher<StateFlow<MovieListUiState>, MovieListAction> {
 
-    private val _showError = MutableStateFlow(false)
     private val _isLoading = MutableStateFlow(false)
     private val _movies = MutableStateFlow<List<Movie>?>(null)
+    private val _movieListScreenState = MutableStateFlow<MovieListScreenState>(MovieListScreenState.Success)
+    init {
+        loadMovies()
+    }
 
-    val uiState: StateFlow<MovieListUiState> =
-        combine(_isLoading, _movies, _showError) { _isLoading, _movies, _showError ->
+    override val uiState: StateFlow<MovieListUiState> =
+        combine(_isLoading, _movies, _movieListScreenState) { _isLoading, _movies, _homeScreenState ->
             MovieListUiState(
                 isLoading = _isLoading,
                 movies = _movies,
-                showError = _showError,
+                movieListScreenState = _homeScreenState
             )
         }.stateIn(
             scope = viewModelScope,
@@ -43,28 +41,35 @@ class MovieListViewModel @Inject constructor(
             initialValue = MovieListUiState()
         )
 
-    init {
-        loadMovies()
+    override fun dispatchViewAction(viewAction: MovieListAction) {
+        when(viewAction) {
+            MovieListAction.Refresh -> refresh()
+        }
     }
 
-    fun loadMovies() {
+    private fun loadMovies() {
         viewModelScope.launch {
             _isLoading.value = true
-            _showError.value = false
             loadMoviesUseCase(
                 genreKey = "popular"
             ).onSuccess {
-                _movies.value = it.movies
-                _showError.value = false
+                if (it.movies.isNotEmpty()) {
+                    _movies.value = it.movies
+                    _movieListScreenState.value = MovieListScreenState.Success
+                } else {
+                    _movies.value = emptyList()
+                    _movieListScreenState.value = MovieListScreenState.Empty
+                }
                 _isLoading.value = false
             }.onError {
-                _showError.value = true
+                _movies.value = null
                 _isLoading.value = false
+                _movieListScreenState.value = MovieListScreenState.Error
             }
         }
     }
 
-    fun refresh() {
+    private fun refresh() {
         loadMovies()
     }
 }

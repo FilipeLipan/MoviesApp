@@ -23,7 +23,7 @@ import com.github.filipelipan.moviesapp.R
 fun GenericErrorScreen(
     title: String,
     buttonName: String,
-    buttonAction: () -> Unit,
+    onButtonClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -48,7 +48,7 @@ fun GenericErrorScreen(
 
             Button(
                 modifier = Modifier.wrapContentSize(),
-                onClick = { buttonAction.invoke() }
+                onClick = { onButtonClick.invoke() }
             ) {
                 Text(
                     text = buttonName,

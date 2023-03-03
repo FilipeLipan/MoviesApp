@@ -24,7 +24,7 @@ import com.github.filipelipan.moviesapp.R
 fun GenericEmptyScreen(
     title: String,
     buttonName: String,
-    buttonAction: () -> Unit,
+    onButtonClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -49,7 +49,7 @@ fun GenericEmptyScreen(
 
             Button(
                 modifier = Modifier.wrapContentSize(),
-                onClick = { buttonAction.invoke() }
+                onClick = { onButtonClick.invoke() }
             ) {
                 Text(
                     text = buttonName,

@@ -66,12 +66,12 @@ private fun MovieContent(
         MovieListScreenState.Empty -> GenericEmptyScreen(
             title = stringResource(R.string.generic_empty_message),
             buttonName = stringResource(R.string.generic_empty_try_again_message),
-            buttonAction = onRefresh
+            onButtonClick = onRefresh
         )
         MovieListScreenState.Error -> GenericErrorScreen(
             title = stringResource(R.string.generic_network_error_message),
             buttonName = stringResource(R.string.generic_network_error_try_again_message),
-            buttonAction = onRefresh
+            onButtonClick = onRefresh
         )
         MovieListScreenState.Success -> MovieListScreenSuccessContent(
             movies = movies,

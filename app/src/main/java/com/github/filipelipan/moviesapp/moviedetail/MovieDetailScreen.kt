@@ -76,12 +76,12 @@ fun MovieDetailScreenContent(
         MovieDetailScreenState.Empty -> GenericEmptyScreen(
             title = stringResource(R.string.generic_empty_message),
             buttonName = stringResource(R.string.generic_empty_try_again_message),
-            buttonAction = onRefresh
+            onButtonClick = onRefresh
         )
         MovieDetailScreenState.Error -> GenericErrorScreen(
             title = stringResource(R.string.generic_network_error_message),
             buttonName = stringResource(R.string.generic_network_error_try_again_message),
-            buttonAction = onRefresh
+            onButtonClick = onRefresh
         )
         MovieDetailScreenState.Success -> MovieDetailScreenSuccessContent(
             movieDetail = movieDetail,
